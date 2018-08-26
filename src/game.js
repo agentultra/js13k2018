@@ -28,26 +28,25 @@ const init = () => Object.assign(state, {
 
 const update = dt => {
     const {plyr, gravity} = state
-    plyr.dy += gravity
 
     if ((Math.round(plyr.y + plyr.dy + plyr.h) >= stageH) || plyr.y <= 0) {
         plyr.dy = 0
+        plyr.y = stageH - plyr.h
         plyr.canJump = true
-    }
-
-    if (btn('Left')) {
-        plyr.dx = -plyr.moveSpeed.x
-    } else if (btn('Right')) {
-        plyr.dx = plyr.moveSpeed.x
     } else {
-        plyr.dx *= 0.7
+        plyr.dy += gravity
     }
 
-    if (btn('Up')) {
-        if (plyr.canJump) {
-            plyr.dy = -plyr.moveSpeed.y
-            plyr.canJump = false
-        }
+    plyr.dx =
+        btn('Left')
+        ? -plyr.moveSpeed.x
+        : btn('Right')
+        ? plyr.moveSpeed.x
+        : plyr.dx * 0.7
+
+    if (btn('Up') && plyr.canJump) {
+        plyr.dy = -plyr.moveSpeed.y
+        plyr.canJump = false
     }
     plyr.x += plyr.dx
     plyr.y += plyr.dy
