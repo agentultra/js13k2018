@@ -1,3 +1,5 @@
+import {Player} from './js/player.js'
+
 const canvas = document.getElementById('stage')
 , stage = canvas.getContext('2d')
 , stageW = 800
@@ -19,25 +21,25 @@ const clr = () => {
 }
 
 const init = () => Object.assign(state, {
-    ball: {x: stageW / 2, y: stageH / 2, dx: 1, dy: 1}
+    gravity: 0.3,
+    plyr: Player(stageW / 2, stageH / 2, 2, 2)
 })
 
 const update = dt => {
-    const {ball} = state
-    ball.x += ball.dx
-    ball.y += ball.dy
+    const {plyr, gravity} = state
+    plyr.dy += gravity
 
-    if (ball.x < 0 || ball.x > stageW)
-        ball.dx = -ball.dx
+    if (((plyr.y + plyr.h * 2) >= stageH) || plyr.y <= 0)
+        plyr.dy = 0
 
-    if (ball.y < 0 || ball.y > stageH)
-        ball.dy = -ball.dy
+    plyr.x += plyr.dx
+    plyr.y += plyr.dy
 }
 
 const render = () => {
-    const {ball} = state
+    const {plyr} = state
     stage.fillStyle = 'white'
-    stage.fillRect(0, 0, 10, 10)
+    stage.fillRect(plyr.x, plyr.y, plyr.w, plyr.h)
 }
 
 const loop = () => {
