@@ -1,5 +1,6 @@
 import {btn} from './js/controls.js'
 import {Player} from './js/player.js'
+import tilemap from './js/tilemap.js'
 
 const canvas = document.getElementById('stage')
 , stage = canvas.getContext('2d')
@@ -21,9 +22,16 @@ const clr = () => {
     stage.fillRect(0, 0, stageW, stageH)
 }
 
+const initTileMap = () => {
+    const m = tilemap.TileMap(60, 60, 10)
+    tilemap.set(10, 10, 1, m)
+    return m
+}
+
 const init = () => Object.assign(state, {
     gravity: 0.3,
-    plyr: Player(stageW / 2, stageH / 2, 0, 2)
+    plyr: Player(stageW / 2, stageH / 2, 0, 2),
+    tileMap: initTileMap()
 })
 
 const update = dt => {
@@ -53,7 +61,8 @@ const update = dt => {
 }
 
 const render = () => {
-    const {plyr} = state
+    const {plyr, tileMap} = state
+    tilemap.render(tileMap, stage)
     stage.fillStyle = 'white'
     stage.fillRect(plyr.x, plyr.y, plyr.w, plyr.h)
 }
