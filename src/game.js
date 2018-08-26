@@ -34,11 +34,11 @@ const update = dt => {
         plyr.dy = 0
 
     if (btn('Left')) {
-        plyr.dx = -1
+        plyr.dx = -plyr.moveSpeed.x
     } else if (btn('Right')) {
-        plyr.dx = 1
+        plyr.dx = plyr.moveSpeed.x
     } else {
-        plyr.dx = 0
+        plyr.dx *= 0.7
     }
     plyr.x += plyr.dx
     plyr.y += plyr.dy
