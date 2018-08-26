@@ -30,7 +30,7 @@ const update = dt => {
     const {plyr, gravity} = state
     plyr.dy += gravity
 
-    if (((plyr.y + plyr.h * 2) >= stageH) || plyr.y <= 0)
+    if ((Math.round(plyr.y + plyr.h) >= stageH) || plyr.y <= 0)
         plyr.dy = 0
 
     if (btn('Left')) {
