@@ -30,8 +30,10 @@ const update = dt => {
     const {plyr, gravity} = state
     plyr.dy += gravity
 
-    if ((Math.round(plyr.y + plyr.h) >= stageH) || plyr.y <= 0)
+    if ((Math.round(plyr.y + plyr.dy + plyr.h) >= stageH) || plyr.y <= 0) {
         plyr.dy = 0
+        plyr.canJump = true
+    }
 
     if (btn('Left')) {
         plyr.dx = -plyr.moveSpeed.x
@@ -39,6 +41,13 @@ const update = dt => {
         plyr.dx = plyr.moveSpeed.x
     } else {
         plyr.dx *= 0.7
+    }
+
+    if (btn('Up')) {
+        if (plyr.canJump) {
+            plyr.dy = -plyr.moveSpeed.y
+            plyr.canJump = false
+        }
     }
     plyr.x += plyr.dx
     plyr.y += plyr.dy
