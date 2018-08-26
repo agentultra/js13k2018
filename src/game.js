@@ -1,3 +1,4 @@
+import {btn} from './js/controls.js'
 import {Player} from './js/player.js'
 
 const canvas = document.getElementById('stage')
@@ -22,7 +23,7 @@ const clr = () => {
 
 const init = () => Object.assign(state, {
     gravity: 0.3,
-    plyr: Player(stageW / 2, stageH / 2, 2, 2)
+    plyr: Player(stageW / 2, stageH / 2, 0, 2)
 })
 
 const update = dt => {
@@ -32,6 +33,13 @@ const update = dt => {
     if (((plyr.y + plyr.h * 2) >= stageH) || plyr.y <= 0)
         plyr.dy = 0
 
+    if (btn('Left')) {
+        plyr.dx = -1
+    } else if (btn('Right')) {
+        plyr.dx = 1
+    } else {
+        plyr.dx = 0
+    }
     plyr.x += plyr.dx
     plyr.y += plyr.dy
 }
