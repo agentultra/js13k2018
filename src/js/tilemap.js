@@ -1,9 +1,9 @@
 import {always} from './utils.js'
 
 const tileSet = [
-    {type: 'floor', passable: false},   // 0 -- key into TileMap.tiles
-    {type: 'wall', passable: false},    // 1
-    {type: 'backwall', passable: true}  // 2
+    {type: 'floor', solid: true},     // 0 -- key into TileMap.tiles
+    {type: 'wall', solid: true},      // 1
+    {type: 'backwall', solid: false}  // 2
 ]
 
 const TileMap = (w, h, tSize, defaultTile=2) => ({
@@ -11,7 +11,12 @@ const TileMap = (w, h, tSize, defaultTile=2) => ({
     tiles: Array.from({length: w * h}, always(defaultTile))
 })
 
-const get = (x, y, map) => tileSet[map.tiles[y * map.h + x]]
+const get = (x, y, map) => {
+    const t = tileSet[map.tiles[y * map.h + x]]
+    if (typeof t === 'undefined')
+        return {solid: true}
+    return t
+}
 
 const set = (x, y, tile, map) => {
     map.tiles[y * map.h + x] = tile
@@ -30,6 +35,9 @@ const render = (tileMap, stage) => {
                 break;
             case t.type === 'backwall':
                 stage.fillStyle = 'blue'
+                break;
+            default:
+                stage.fillStyle = 'pink'
                 break;
             }
             stage.fillRect(i * tileMap.tSize, j * tileMap.tSize,
