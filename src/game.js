@@ -1,4 +1,5 @@
 import {btn} from './js/controls.js'
+import {loadLevel} from './js/loaders/level.js'
 import {Player} from './js/player.js'
 import tilemap from './js/tilemap.js'
 
@@ -22,24 +23,29 @@ const clr = () => {
     stage.fillRect(0, 0, stageW, stageH)
 }
 
-const initTileMap = () => {
-    const m = tilemap.TileMap(60, 60, 10)
-    tilemap.set(10, 10, 1, m)
-    tilemap.set(10, 30, 1, m)
-    for (let i = 0; i < 60; i++)
-        tilemap.set(i, 40, 1, m)
-    for (let i = 0; i < 20; i++) {
-        for (let j = 30; j < 40; j++) {
-            tilemap.set(i, j, 1, m)
+const initTileMap = tmap => {
+    const m = tilemap.TileMap(tmap.w, tmap.h, tmap.tSize, 99)
+    for (const bg of tmap.backgrounds) {
+        for (let i = bg.x1; i <= bg.x2; i++) {
+            for (let j = bg.y1; j <= bg.y2; j++) {
+                tilemap.set(i, j, bg.type, m)
+            }
+        }
+    }
+    for (const w of tmap.walls) {
+        for (let i = w.x1; i <= w.x2; i++) {
+            for (let j = w.y1; j <= w.y2; j++) {
+                tilemap.set(i, j, w.type, m)
+            }
         }
     }
     return m
 }
 
-const init = () => Object.assign(state, {
+const init = initialLevel => Object.assign(state, {
     gravity: 0.3,
     plyr: Player(stageW / 2, stageH / 2, 0, 2),
-    tileMap: initTileMap(),
+    tileMap: initTileMap(initialLevel.tilemap),
     velLimit: {x: 2, y: 16}
 })
 
@@ -134,11 +140,10 @@ const render = () => {
     stage.fillRect(plyr.x, plyr.y, plyr.w, plyr.h)
 }
 
-const loop = () => {
+const loop = dt => {
     window.requestAnimationFrame(loop)
     currentTime = (new Date()).getTime()
     dt = currentTime - lastTime
-
     update(dt)
 
     if (dt > interval) {
@@ -148,5 +153,9 @@ const loop = () => {
     }
 }
 
-init()
-window.requestAnimationFrame(loop)
+Promise.all([
+    loadLevel('1-1')
+]).then(([lvl]) => {
+    init(lvl)
+    window.requestAnimationFrame(loop)
+})
