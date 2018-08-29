@@ -12,14 +12,14 @@ const TileMap = (w, h, tSize, defaultTile=2) => ({
 })
 
 const get = (x, y, map) => {
-    const t = tileSet[map.tiles[y * map.h + x]]
+    const t = tileSet[map.tiles[(y * map.w) + x]]
     if (typeof t === 'undefined')
         return {solid: true}
     return t
 }
 
 const set = (x, y, tile, map) => {
-    map.tiles[y * map.h + x] = tile
+    map.tiles[(y * map.w) + x] = tile
 }
 
 const render = (tileMap, stage) => {
