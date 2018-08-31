@@ -43,7 +43,7 @@ const initTileMap = tmap => {
 }
 
 const init = initialLevel => Object.assign(state, {
-    gravity: 0.3,
+    gravity: 0.4,
     plyr: Player(stageW / 2, stageH / 2, 0, 2),
     tileMap: initTileMap(initialLevel.tilemap),
     velLimit: {x: 2, y: 16}
@@ -70,9 +70,9 @@ const update = dt => {
     ,     testY  = plyr.y + plyr.dy
     ,     offset = Math.round((tileMap.tSize / 2) - 1)
     ,     tile   = tilemap.get(
+        tileMap,
         Math.round(plyr.x / tileMap.tSize),
-        Math.round(plyr.y / tileMap.tSize),
-        tileMap
+        Math.round(plyr.y / tileMap.tSize)
     )
 
     plyr.dy += gravity
@@ -85,14 +85,14 @@ const update = dt => {
     ,     testXRight  = Math.ceil((testX / tileMap.tSize))
     ,     xNear1      = Math.round((plyr.x - offset) / tileMap.tSize)
     ,     xNear2      = Math.round((plyr.x + offset) / tileMap.tSize)
-    ,     top1Tile    = tilemap.get(xNear1, testYTop, tileMap)
-    ,     top2Tile    = tilemap.get(xNear2, testYTop, tileMap)
-    ,     bottom1Tile = tilemap.get(xNear1, testYBottom, tileMap)
-    ,     bottom2Tile = tilemap.get(xNear2, testYBottom, tileMap)
-    ,     left1Tile   = tilemap.get(testXLeft, yNear1, tileMap)
-    ,     left2Tile   = tilemap.get(testXLeft, yNear2, tileMap)
-    ,     right1Tile  = tilemap.get(testXRight, yNear1, tileMap)
-    ,     right2Tile  = tilemap.get(testXRight, yNear2, tileMap)
+    ,     top1Tile    = tilemap.get(tileMap, xNear1, testYTop)
+    ,     top2Tile    = tilemap.get(tileMap, xNear2, testYTop)
+    ,     bottom1Tile = tilemap.get(tileMap, xNear1, testYBottom)
+    ,     bottom2Tile = tilemap.get(tileMap, xNear2, testYBottom)
+    ,     left1Tile   = tilemap.get(tileMap, testXLeft, yNear1)
+    ,     left2Tile   = tilemap.get(tileMap, testXLeft, yNear2)
+    ,     right1Tile  = tilemap.get(tileMap, testXRight, yNear1)
+    ,     right2Tile  = tilemap.get(tileMap, testXRight, yNear2)
 
     plyr.dx = Math.min(Math.max(plyr.dx, -velLimit.x), velLimit.x)
     plyr.dy = Math.min(Math.max(plyr.dy, -velLimit.y), velLimit.y)
@@ -101,24 +101,24 @@ const update = dt => {
     plyr.dx *= 0.7
 
     if (left1Tile.solid || left2Tile.solid || right1Tile.solid || right2Tile.solid) {
-        while (tilemap.get(Math.floor(plyr.x / tileMap.tSize), yNear1, tileMap).solid ||
-               tilemap.get(Math.floor(plyr.x / tileMap.tSize), yNear2, tileMap).solid)
+        while (tilemap.get(tileMap, Math.floor(plyr.x / tileMap.tSize), yNear1).solid ||
+               tilemap.get(tileMap, Math.floor(plyr.x / tileMap.tSize), yNear2).solid)
             plyr.x += 0.1
 
-        while (tilemap.get(Math.ceil(plyr.x / tileMap.tSize), yNear1, tileMap).solid ||
-               tilemap.get(Math.ceil(plyr.x / tileMap.tSize), yNear2, tileMap).solid)
+        while (tilemap.get(tileMap, Math.ceil(plyr.x / tileMap.tSize), yNear1).solid ||
+               tilemap.get(tileMap, Math.ceil(plyr.x / tileMap.tSize), yNear2).solid)
             plyr.x -= 0.1
 
         plyr.dx = 0
     }
 
     if (top1Tile.solid || top2Tile.solid || bottom1Tile.solid || bottom2Tile.solid) {
-        while (tilemap.get(xNear1, Math.floor(plyr.y / tileMap.tSize), tileMap).solid ||
-               tilemap.get(xNear2, Math.floor(plyr.y / tileMap.tSize), tileMap).solid)
+        while (tilemap.get(tileMap, xNear1, Math.floor(plyr.y / tileMap.tSize)).solid ||
+               tilemap.get(tileMap, xNear2, Math.floor(plyr.y / tileMap.tSize)).solid)
             plyr.y += 0.1
 
-        while (tilemap.get(xNear1, Math.ceil(plyr.y / tileMap.tSize), tileMap).solid ||
-               tilemap.get(xNear2, Math.ceil(plyr.y / tileMap.tSize), tileMap).solid)
+        while (tilemap.get(tileMap, xNear1, Math.ceil(plyr.y / tileMap.tSize)).solid ||
+               tilemap.get(tileMap, xNear2, Math.ceil(plyr.y / tileMap.tSize)).solid)
             plyr.y -= 0.1
 
         plyr.dy = 0

@@ -11,7 +11,7 @@ const TileMap = (w, h, tSize, defaultTile=2) => ({
     tiles: Array.from({length: w * h}, always(defaultTile))
 })
 
-const get = (x, y, map) => {
+const get = (map, x, y) => {
     const t = tileSet[map.tiles[(y * map.w) + x]]
     if (typeof t === 'undefined')
         return {solid: true}
@@ -25,7 +25,7 @@ const set = (x, y, tile, map) => {
 const render = (tileMap, stage) => {
     for (let j = 0; j < tileMap.h; j++) {
         for (let i = 0; i < tileMap.w; i++) {
-            const t = get(i, j, tileMap)
+            const t = get(tileMap, i, j)
             switch (true) {
             case t.type === 'floor':
                 stage.fillStyle = 'green'
