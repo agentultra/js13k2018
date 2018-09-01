@@ -46,7 +46,7 @@ const init = initialLevel => Object.assign(state, {
     gravity: 0.4,
     plyr: Player(stageW / 2, stageH / 2, 0, 2),
     tileMap: initTileMap(initialLevel.tilemap),
-    velLimit: {x: 2, y: 16}
+    velLimit: {x: 2, y: 8}
 })
 
 const update = dt => {
@@ -154,8 +154,9 @@ const loop = dt => {
 }
 
 Promise.all([
-    loadLevel('1-1')
-]).then(([lvl]) => {
-    init(lvl)
+    loadLevel('1-1'),
+    loadLevel('1-2')
+]).then(([lvl1, lvl2]) => {
+    init(lvl2)
     window.requestAnimationFrame(loop)
 })
