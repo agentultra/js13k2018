@@ -42,12 +42,12 @@ const initTileMap = tmap => {
     return m
 }
 
-const init = initialLevel => Object.assign(state, {
+const init = level => Object.assign(state, {
     gravity: 0.4,
-    plyr: Player(initialLevel.start[0] * initialLevel.tilemap.tSize,
-                 initialLevel.start[1] * initialLevel.tilemap.tSize,
+    plyr: Player(level.start[0] * level.tilemap.tSize,
+                 level.start[1] * level.tilemap.tSize,
                  0, 2),
-    tileMap: initTileMap(initialLevel.tilemap),
+    tileMap: initTileMap(level.tilemap),
     velLimit: {x: 2, y: 8}
 })
 
@@ -133,6 +133,9 @@ const update = dt => {
             plyr.canJump = false
         }
     }
+    if (btn('Action')) {
+        init(state.levels[1])
+    }
 }
 
 const render = () => {
@@ -158,7 +161,8 @@ const loop = dt => {
 Promise.all([
     loadLevel('1-1'),
     loadLevel('1-2')
-]).then(([lvl1, lvl2]) => {
-    init(lvl2)
+]).then(lvls => {
+    init(lvls[0])
+    state.levels = lvls
     window.requestAnimationFrame(loop)
 })
