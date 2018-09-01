@@ -44,7 +44,9 @@ const initTileMap = tmap => {
 
 const init = initialLevel => Object.assign(state, {
     gravity: 0.4,
-    plyr: Player(stageW / 2, stageH / 2, 0, 2),
+    plyr: Player(initialLevel.start[0] * initialLevel.tilemap.tSize,
+                 initialLevel.start[1] * initialLevel.tilemap.tSize,
+                 0, 2),
     tileMap: initTileMap(initialLevel.tilemap),
     velLimit: {x: 2, y: 8}
 })
