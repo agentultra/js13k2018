@@ -7,6 +7,11 @@ const canvas = document.getElementById('stage')
 , stage = canvas.getContext('2d')
 , stageW = 800
 , stageH = 420
+, states = {
+    TITLE: 0,
+    LEVEL_TITLE: 1,
+    LEVEL: 2
+}
 
 canvas.width = stageW
 canvas.height = stageH
@@ -43,6 +48,7 @@ const initTileMap = tmap => {
 }
 
 const init = level => Object.assign(state, {
+    gameState: states.TITLE,
     gravity: 0.4,
     plyr: Player(level.start[0] * level.tilemap.tSize,
                  level.start[1] * level.tilemap.tSize,
@@ -51,8 +57,27 @@ const init = level => Object.assign(state, {
     velLimit: {x: 2, y: 8}
 })
 
+const startLevel = level => Object.assign(state, {
+    gameState: states.LEVEL_TITLE,
+    plyr: Player(level.start[0] * level.tilemap.tSize,
+                 level.start[1] * level.tilemap.tSize,
+                 0, 2),
+    tileMap: initTileMap(level.tilemap)
+})
+
 const update = dt => {
-    const {plyr, gravity, tileMap, velLimit} = state
+    const {gameState} = state
+    if (gameState === states.LEVEL) {
+        updateLevel(dt)
+    } else if (gameState === states.LEVEL_TITLE) {
+        updateLevelTitle(dt)
+    } else if (gameState === states.TITLE) {
+        updateTitle(dt)
+    }
+}
+
+const updateLevel = dt => {
+        const {plyr, gravity, tileMap, velLimit, gameState} = state
 
     // update the player
     plyr.dx =
@@ -134,15 +159,46 @@ const update = dt => {
         }
     }
     if (btn('Action')) {
-        init(state.levels[1])
+        state.gameState = states.TITLE
     }
 }
 
+const updateLevelTitle = dt => {
+    if (btn('Action'))
+        state.gameState = states.LEVEL
+}
+
+const updateTitle = dt => {
+    if (btn('Action'))
+        state.gameState = states.LEVEL_TITLE
+}
+
 const render = () => {
+    const {plyr, tileMap, gameState} = state
+    if (gameState === states.LEVEL) {
+        renderLevel()
+    } else if (gameState === states.LEVEL_TITLE) {
+        renderLevelTitle()
+    } else if (gameState === states.TITLE) {
+        renderTitle()
+    }
+}
+
+const renderLevel = () => {
     const {plyr, tileMap} = state
     tilemap.render(tileMap, stage)
     stage.fillStyle = 'white'
     stage.fillRect(plyr.x, plyr.y, plyr.w, plyr.h)
+}
+
+const renderLevelTitle = () => {
+    stage.fillStyle = 'white'
+    stage.fillText('Hello')
+}
+
+const renderTitle = () => {
+    stage.fillStyle = 'white'
+    stage.fillText('Offline', 10, 50)
 }
 
 const loop = dt => {
