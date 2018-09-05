@@ -1,4 +1,4 @@
-import {btn} from './js/controls.js'
+import {btn, btnh, pumpEvents, getButtons} from './js/controls.js'
 import {loadLevel} from './js/loaders/level.js'
 import {Player} from './js/player.js'
 import tilemap from './js/tilemap.js'
@@ -49,6 +49,7 @@ const initTileMap = tmap => {
 
 const init = level => Object.assign(state, {
     gameState: states.TITLE,
+    ticks: 0,
     gravity: 0.4,
     plyr: Player(level.start[0] * level.tilemap.tSize,
                  level.start[1] * level.tilemap.tSize,
@@ -74,6 +75,7 @@ const update = dt => {
     } else if (gameState === states.TITLE) {
         updateTitle(dt)
     }
+    state.ticks++
 }
 
 const updateLevel = dt => {
@@ -164,12 +166,12 @@ const updateLevel = dt => {
 }
 
 const updateLevelTitle = dt => {
-    if (btn('Action'))
+    if (btnh('Action', 100))
         state.gameState = states.LEVEL
 }
 
 const updateTitle = dt => {
-    if (btn('Action'))
+    if (btnh('Action', 3))
         state.gameState = states.LEVEL_TITLE
 }
 
@@ -182,6 +184,13 @@ const render = () => {
     } else if (gameState === states.TITLE) {
         renderTitle()
     }
+
+    const btns = getButtons()
+    , bs = Object.values(btns)
+    stage.fillStyle = 'white'
+    for (let i = 0; i < Object.keys(btns).length; i++) {
+        stage.fillText(JSON.stringify(bs[i]), 10, 70 + (i * 12))
+    }
 }
 
 const renderLevel = () => {
@@ -193,7 +202,7 @@ const renderLevel = () => {
 
 const renderLevelTitle = () => {
     stage.fillStyle = 'white'
-    stage.fillText('Hello')
+    stage.fillText('Hello', 10, 50)
 }
 
 const renderTitle = () => {
@@ -212,6 +221,8 @@ const loop = dt => {
         render()
         lastTime = currentTime - (dt % interval)
     }
+
+    pumpEvents()
 }
 
 Promise.all([
