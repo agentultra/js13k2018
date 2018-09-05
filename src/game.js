@@ -1,4 +1,4 @@
-import {btn, btnh, pumpEvents, getButtons} from './js/controls.js'
+import {btn, btnh, pumpEvents, getButtons, clearButtons} from './js/controls.js'
 import {loadLevel} from './js/loaders/level.js'
 import {Player} from './js/player.js'
 import tilemap from './js/tilemap.js'
@@ -166,13 +166,17 @@ const updateLevel = dt => {
 }
 
 const updateLevelTitle = dt => {
-    if (btnh('Action', 100))
+    if (btnh('Action', 8)) {
         state.gameState = states.LEVEL
+        clearButtons()
+    }
 }
 
 const updateTitle = dt => {
-    if (btnh('Action', 3))
+    if (btnh('Action', 8)) {
         state.gameState = states.LEVEL_TITLE
+        clearButtons()
+    }
 }
 
 const render = () => {

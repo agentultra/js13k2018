@@ -1,4 +1,4 @@
-const buttons = {
+let buttons = {
     Up: {held: 0, frames: 0},
     Down: {held: 0, frames: 0},
     Left: {held: 0, frames: 0},
@@ -7,16 +7,27 @@ const buttons = {
 }
 
 export const btn = name => buttons.hasOwnProperty(name) && buttons[name].held
+
 export const btnh = (name, frames) =>
     buttons.hasOwnProperty(name) &&
     buttons[name].held &&
     buttons[name].frames >= frames
+
 export const getButtons = () => buttons
+
+export const clearButtons = () => {
+    buttons = {
+        Up: {held: 0, frames: 0},
+        Down: {held: 0, frames: 0},
+        Left: {held: 0, frames: 0},
+        Right: {held: 0, frames: 0},
+        Action: {held: 0, frames: 0}
+    }
+}
 
 export const pumpEvents = () => {
     for (let b of Object.values(buttons)) {
         if (b.held) b.frames++
-//        b.frames = 0
     }
 }
 
