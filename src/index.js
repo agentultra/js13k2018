@@ -1,7 +1,11 @@
-import {btn, btnh, pumpEvents, getButtons, clearButtons} from './js/controls.js'
-import {loadLevel} from './js/loaders/level.js'
-import {Player} from './js/player.js'
-import tilemap from './js/tilemap.js'
+import './assets/levels/1-1.json'
+import './assets/levels/1-2.json'
+import './assets/sounds/jump.wav'
+import './styles/main.css'
+import {btn, btnh, pumpEvents, getButtons, clearButtons} from './js/controls'
+import {loadLevel} from './js/loaders/level'
+import {Player} from './js/player'
+import tilemap from './js/tilemap'
 
 const canvas = document.getElementById('stage')
 , stage = canvas.getContext('2d')
@@ -225,11 +229,7 @@ const loop = dt => {
     pumpEvents()
 }
 
-Promise.all([
-    loadLevel('1-1'),
-    loadLevel('1-2')
-]).then((lvls) => {
-    init(lvls[0])
-    state.levels = lvls
-    window.requestAnimationFrame(loop)
-})
+const lvls = [require('./assets/levels/1-1.json'), require('./assets/levels/1-2.json')]
+init(lvls[0])
+state.levels = lvls
+window.requestAnimationFrame(loop)

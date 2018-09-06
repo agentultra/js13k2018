@@ -1,4 +1,4 @@
-import {always} from './utils.js'
+import {always} from './utils'
 
 const tileSet = [
     {type: 'floor', solid: true},     // 0 -- key into TileMap.tiles
