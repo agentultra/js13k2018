@@ -12,6 +12,7 @@ const canvas = document.getElementById('stage')
     LEVEL_TITLE: 1,
     LEVEL: 2
 }
+, sfxJump = document.getElementById('sfxJump')
 
 canvas.width = stageW
 canvas.height = stageH
@@ -92,6 +93,7 @@ const updateLevel = dt => {
     if (btn('Up') && plyr.canJump) {
         plyr.dy = -plyr.moveSpeed.y
         plyr.canJump = false
+        sfxJump.play()
     }
 
     // move the player
@@ -162,6 +164,7 @@ const updateLevel = dt => {
     }
     if (btn('Action')) {
         state.gameState = states.TITLE
+        clearButtons()
     }
 }
 
@@ -187,13 +190,6 @@ const render = () => {
         renderLevelTitle()
     } else if (gameState === states.TITLE) {
         renderTitle()
-    }
-
-    const btns = getButtons()
-    , bs = Object.values(btns)
-    stage.fillStyle = 'white'
-    for (let i = 0; i < Object.keys(btns).length; i++) {
-        stage.fillText(JSON.stringify(bs[i]), 10, 70 + (i * 12))
     }
 }
 
@@ -232,7 +228,7 @@ const loop = dt => {
 Promise.all([
     loadLevel('1-1'),
     loadLevel('1-2')
-]).then(lvls => {
+]).then((lvls) => {
     init(lvls[0])
     state.levels = lvls
     window.requestAnimationFrame(loop)
