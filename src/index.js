@@ -1,6 +1,7 @@
 import './assets/levels/1-1.json'
 import './assets/levels/1-2.json'
 import './assets/sounds/jump.wav'
+import './assets/images/sprites.png'
 import './styles/main.css'
 import {btn, btnh, pumpEvents, getButtons, clearButtons} from './js/controls'
 import {loadLevel} from './js/loaders/level'
@@ -17,7 +18,9 @@ const canvas = document.getElementById('stage')
     LEVEL: 2
 }
 , sfxJump = document.getElementById('sfxJump')
+, spriteSheet = new Image()
 
+spriteSheet.src = 'src/assets/images/sprites.png'
 canvas.width = stageW
 canvas.height = stageH
 
@@ -200,8 +203,13 @@ const render = () => {
 const renderLevel = () => {
     const {plyr, tileMap} = state
     tilemap.render(tileMap, stage)
-    stage.fillStyle = 'white'
-    stage.fillRect(plyr.x, plyr.y, plyr.w, plyr.h)
+    stage.strokeStyle = 'pink'
+    stage.strokeRect(plyr.x, plyr.y, 16, 16)
+    stage.drawImage(
+        spriteSheet,
+        0, 0, 16, 16,
+        plyr.x, plyr.y, 16, 16
+    )
 }
 
 const renderLevelTitle = () => {
@@ -229,7 +237,10 @@ const loop = dt => {
     pumpEvents()
 }
 
-const lvls = [require('./assets/levels/1-1.json'), require('./assets/levels/1-2.json')]
+const lvls = [
+    require('./assets/levels/1-1.json'),
+    require('./assets/levels/1-2.json')
+]
 init(lvls[0])
 state.levels = lvls
 window.requestAnimationFrame(loop)
