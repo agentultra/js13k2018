@@ -22,11 +22,21 @@ const set = (x, y, tile, map) => {
     map.tiles[(y * map.w) + x] = tile
 }
 
-const render = (tileMap, stage) => {
+const render = (tileMap, stage, camera) => {
     for (let j = 0; j < tileMap.h; j++) {
         for (let i = 0; i < tileMap.w; i++) {
             const t = get(tileMap, i, j)
-            let sx = -1, sy = -1
+            let sx = -1
+            , sy = -1
+            , tileX = (i * tileMap.tSize) - camera.x
+            , tileY = (j * tileMap.tSize) - camera.y
+
+            if (tileX < -tileMap.tSize ||
+                tileY < -tileMap.tSize ||
+                tileX > 200 ||
+                tileY > 105)
+                continue
+
             switch (true) {
             case t.type === 'floor':
                 sx = 0
@@ -49,7 +59,7 @@ const render = (tileMap, stage) => {
                             sx * tileMap.tSize,
                             sy * tileMap.tSize,
                             tileMap.tSize, tileMap.tSize,
-                            i * tileMap.tSize, j * tileMap.tSize,
+                            tileX, tileY,
                             tileMap.tSize, tileMap.tSize)
         }
     }

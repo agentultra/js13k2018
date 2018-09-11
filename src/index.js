@@ -6,6 +6,7 @@ import './styles/main.css'
 import {btn, btnh, pumpEvents, getButtons, clearButtons} from './js/controls'
 import {loadLevel} from './js/loaders/level'
 import {Player} from './js/player'
+import {Camera} from './js/camera'
 import tilemap from './js/tilemap'
 
 const canvas = document.getElementById('stage')
@@ -63,7 +64,11 @@ const init = level => Object.assign(state, {
                  level.start[1] * level.tilemap.tSize,
                  0, 2),
     tileMap: initTileMap(level.tilemap),
-    velLimit: {x: 2, y: 8}
+    velLimit: {x: 2, y: 8},
+    camera: Camera(level.start[0] * level.tilemap.tSize,
+                   level.start[1] * level.tilemap.tSize,
+                   level.camWidth, level.camHeight,
+                   30, 5)
 })
 
 const startLevel = level => Object.assign(state, {
@@ -87,7 +92,13 @@ const update = dt => {
 }
 
 const updateLevel = dt => {
-        const {plyr, gravity, tileMap, velLimit, gameState} = state
+    const { plyr
+          , gravity
+          , tileMap
+          , velLimit
+          , gameState
+          , camera
+          } = state
 
     // update the player
     plyr.dx =
@@ -169,6 +180,22 @@ const updateLevel = dt => {
             plyr.canJump = false
         }
     }
+
+    // update the camera
+
+    if (plyr.x > camera.x + camera.w - camera.sx) {
+        camera.x += plyr.x - ((camera.x + camera.w) - camera.sx)
+    }
+    if (plyr.x < (camera.x + camera.sx)) {
+        camera.x -= (camera.x + camera.sx) - plyr.x
+    }
+    if (plyr.y > camera.y + camera.h - camera.sy) {
+        camera.y += plyr.y - ((camera.y + camera.h) - camera.sy)
+    }
+    if (plyr.y < (camera.y + camera.sy)) {
+        camera.y -= (camera.y + camera.sy) - plyr.y
+    }
+
     if (btn('Action')) {
         state.gameState = states.TITLE
         clearButtons()
@@ -201,12 +228,12 @@ const render = () => {
 }
 
 const renderLevel = () => {
-    const {plyr, tileMap} = state
-    tilemap.render(tileMap, stage)
+    const {plyr, tileMap, camera} = state
+    tilemap.render(tileMap, stage, camera)
     stage.drawImage(
         spriteSheet,
         0, 0, 16, 16,
-        plyr.x, plyr.y, 16, 16
+        plyr.x - camera.x, plyr.y - camera.y, 16, 16
     )
 }
 
