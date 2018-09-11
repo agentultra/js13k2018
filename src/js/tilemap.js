@@ -6,8 +6,8 @@ const tileSet = [
     {type: 'backwall', solid: false}  // 2
 ]
 
-const TileMap = (w, h, tSize, defaultTile=2) => ({
-    w, h, tSize,
+const TileMap = (w, h, tSize, img, defaultTile=2) => ({
+    w, h, tSize, img,
     tiles: Array.from({length: w * h}, always(defaultTile))
 })
 
@@ -26,22 +26,31 @@ const render = (tileMap, stage) => {
     for (let j = 0; j < tileMap.h; j++) {
         for (let i = 0; i < tileMap.w; i++) {
             const t = get(tileMap, i, j)
+            let sx = -1, sy = -1
             switch (true) {
             case t.type === 'floor':
-                stage.fillStyle = 'green'
+                sx = 0
+                sy = 1
                 break;
             case t.type === 'wall':
-                stage.fillStyle = 'red'
+                sx = 2
+                sy = 1
                 break;
             case t.type === 'backwall':
-                stage.fillStyle = 'blue'
+                sx = 1
+                sy = 1
                 break;
             default:
-                stage.fillStyle = 'pink'
+                sx = 1
+                sy = 3
                 break;
             }
-            stage.fillRect(i * tileMap.tSize, j * tileMap.tSize,
-                           tileMap.tSize, tileMap.tSize)
+            stage.drawImage(tileMap.img,
+                            sx * tileMap.tSize,
+                            sy * tileMap.tSize,
+                            tileMap.tSize, tileMap.tSize,
+                            i * tileMap.tSize, j * tileMap.tSize,
+                            tileMap.tSize, tileMap.tSize)
         }
     }
 }

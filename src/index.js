@@ -10,8 +10,8 @@ import tilemap from './js/tilemap'
 
 const canvas = document.getElementById('stage')
 , stage = canvas.getContext('2d')
-, stageW = 800
-, stageH = 420
+, stageW = 200
+, stageH = 105
 , states = {
     TITLE: 0,
     LEVEL_TITLE: 1,
@@ -37,7 +37,7 @@ const clr = () => {
 }
 
 const initTileMap = tmap => {
-    const m = tilemap.TileMap(tmap.w, tmap.h, tmap.tSize, 99)
+    const m = tilemap.TileMap(tmap.w, tmap.h, tmap.tSize, spriteSheet, 99)
     for (const bg of tmap.backgrounds) {
         for (let i = bg.x1; i <= bg.x2; i++) {
             for (let j = bg.y1; j <= bg.y2; j++) {
@@ -203,8 +203,6 @@ const render = () => {
 const renderLevel = () => {
     const {plyr, tileMap} = state
     tilemap.render(tileMap, stage)
-    stage.strokeStyle = 'pink'
-    stage.strokeRect(plyr.x, plyr.y, 16, 16)
     stage.drawImage(
         spriteSheet,
         0, 0, 16, 16,
