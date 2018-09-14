@@ -39,5 +39,15 @@ archive.append(
     name: 'index.html'
   }
 )
+archive.append(
+    fs.createReadStream('./dist/src/assets/images/sprites.png'), {
+        name: 'src/assets/images/sprites.png'
+    }
+)
+archive.append(
+    fs.createReadStream('./dist/src/assets/sounds/jump.wav'), {
+        name: 'src/assets/sounds/jump.wav'
+    }
+)
 
 archive.finalize()
